@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Member Card Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.cdnfonts.com/css/ethnocentric" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>3D Member Card Generator</h1>
+    <p class="subtitle">Create stunning 3D member cards with custom themes</p>
+
+    <div class="content">
+      <!-- Card Preview -->
+      <div class="card-container">
+        <div class="perspective">
+          <div id="card" class="card">
+            <div class="card-body">
+                <div class="edge-layer"></div>
+                <div class="depth-layer"></div>
+              <div class="glare"></div>
+              <!-- Logo + Text -->
+              <div class="logo">
+                <img src="logo.png" alt="Logo">
+                <div class="logo-text">
+                  <p class="club-pass">MEMBER CLUB PASS</p>
+                  <p class="rialo">RIALO</p>
+                </div>
+              </div>
+
+              <!-- Center Info -->
+              <div class="member-info">
+                <h2 id="center-name">MIKASA ENIX</h2>
+                <p class="member-subtext">MEMBER</p>
+              </div>
+
+              <div class="bottom-right">
+                <div class="photo" id="photo-container">
+                  <img id="photo" src="https://placehold.co/120x120/cccccc/666666?text=PHOTO" alt="Photo">
+                </div>
+              </div>
+
+              <div class="pattern"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <label>Member Name</label>
+        <input type="text" id="member-name" placeholder="Enter member name" maxlength="25" />
+
+        <label>Font Style</label>
+        <select id="font-style">
+          <option value="'Inter', sans-serif">Inter</option>
+          <option value="'Poppins', sans-serif">Poppins</option>
+          <option value="'Montserrat', sans-serif">Montserrat</option>
+          <option value="'Orbitron', sans-serif">Orbitron</option>
+          <option value="'Playfair Display', serif">Playfair Display</option>
+        </select>
+
+        <label>Member Photo</label>
+        <input type="file" id="upload" accept="image/*" />
+        <p id="upload-success"></p>
+
+        <label>Choose Theme</label>
+        <div id="themes" class="themes"></div>
+
+        <button id="download">Download as PNG</button>
+        <p class="info">Hover over the card to see the 3D effect</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
