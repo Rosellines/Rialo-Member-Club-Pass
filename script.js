@@ -24,7 +24,7 @@ const themes = [
     gradient: "linear-gradient(135deg, #d4af37 0%, #f4e5a1 50%, #d4af37 100%)",
     accent: "#b8941e",
     textColor: "#ffffff",
-    logo: "logo1.png"
+    logo: "logo.png"
   },
   {
     id: "forest",
@@ -32,15 +32,15 @@ const themes = [
     gradient: "linear-gradient(135deg, #10b981 0%, #c1ffb6 50%, #10b981 100%)",
     accent: "#059669",
     textColor: "#ffffff",
-    logo: "logo1.png"
+    logo: "logo.png"
   },
   {
     id: "carbon",
     name: "Carbon Black",
     gradient: "linear-gradient(135deg, #1f2937 0%, #4b5563 50%, #1f2937 100%)",
     accent: "#111827",
-    textColor: "#d4af37",
-    logo: "logo2.png"
+    textColor: "#ecb605ff",
+    logo: "logo1.png"
   }
 ];
 
@@ -119,8 +119,8 @@ function updateCardTheme() {
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
   const textShadow =
     brightness > 128
-      ? "0 2px 4px rgba(0,0,0,0.45)"
-      : "0 2px 4px rgba(255,255,255,0.25)";
+      ? "0 1.5px 0px rgba(0,0,0,0.45)"
+      : "0 1.5px 0px rgba(255,255,255,0.25)";
   [nameText, subText, clubPassText, rialoText].forEach(el => {
     el.style.textShadow = textShadow;
   });
@@ -128,7 +128,7 @@ function updateCardTheme() {
 updateCardTheme();
 
 /* ==========================
-   🧭 3D DEPTH — FISIK (tanpa shadow box)
+   🧭 3D DEPTH — FISIK
    ========================== */
 const bodyLayer = card.querySelector(".card-body");
 
@@ -147,14 +147,22 @@ card.addEventListener("mousemove", e => {
   const depth = ((y - centerY) / centerY) * 18;
   bodyLayer.style.transform = `translateZ(${Math.abs(depth)}px)`;
   depthLayer.style.transform = `translateZ(${Math.abs(depth) * 1.4}px)`;
-  edgeLayer.style.transform = `translateZ(-6px)`;
+  edgeLayer.style.transform = `translateZ(20px) rotateX(${rotateX / 4}deg) rotateY(${rotateY / 4}deg)`;
 
-  // Efek highlight cahaya mengikuti posisi
-  const lightX = (x / rect.width) * 100;
-  const lightY = (y / rect.height) * 100;
-  depthLayer.style.background = `
-    radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255,255,255,0.18), rgba(0,0,0,0.6))
+ // Efek highlight cahaya mengikuti posisi
+const lightX = (x / rect.width) * 100;
+const lightY = (y / rect.height) * 100;
+depthLayer.style.background = `
+  radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255, 255, 255, 0.05), transparent)
+`;
+
+  // Efek glass glare (pantulan kaca)
+  const glare = card.querySelector('.glare');
+  glare.style.background = `
+    radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255,255,255,0.45), rgba(255,255,255,0.05) 60%, transparent 100%)
   `;
+  glare.style.mixBlendMode = "screen";
+  glare.style.opacity = 0.5;
 });
 
 card.addEventListener("mouseenter", () => {
