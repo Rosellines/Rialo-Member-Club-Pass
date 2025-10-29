@@ -41,6 +41,14 @@ const themes = [
     accent: "#111827",
     textColor: "#ecb605ff",
     logo: "logo1.png"
+  },
+   {
+    id: "halloween",
+    name: "Haunted Night",
+    gradient: "linear-gradient(135deg, #ff6b00 0%, #f5a300ff 40%, #ff6b00 100%)",
+    accent: "#ff6b00",
+    textColor: "#ffffffff",
+    logo: "logo.png"
   }
 ];
 
@@ -121,10 +129,38 @@ function updateCardTheme() {
     brightness > 128
       ? "0 1.5px 0px rgba(0,0,0,0.45)"
       : "0 1.5px 0px rgba(255,255,255,0.25)";
-  [nameText, subText, clubPassText, rialoText].forEach(el => {
+     [nameText, subText, clubPassText, rialoText].forEach(el => {
     el.style.textShadow = textShadow;
   });
+
+  /* 🎃 FIX FINAL */
+  if (selectedTheme.id === "halloween") {
+    body.classList.add("haunted-only");
+    body.style.removeProperty("background");
+  } else {
+    body.classList.remove("haunted-only");
+    body.style.background = selectedTheme.gradient;
+  }
+  /* 🎃 Dekorasi Halloween hanya muncul di tema Haunted Night */
+  const existingDecor = document.querySelector(".halloween-decor");
+  if (selectedTheme.id === "halloween") {
+    if (!existingDecor) {
+      const decor = document.createElement("div");
+      decor.className = "halloween-decor";
+      decor.innerHTML = `
+        <img src="moon.png" class="moon" alt="Moon">
+        <img src="bat.png" class="bat bat1" alt="Bat">
+        <img src="bat.png" class="bat bat2" alt="Bat">
+        <img src="pumpkin.png" class="pumpkin" alt="Pumpkin">
+      `;
+      body.appendChild(decor);
+    }
+  } else {
+    if (existingDecor) existingDecor.remove();
+  }
+
 }
+
 updateCardTheme();
 
 /* ==========================
