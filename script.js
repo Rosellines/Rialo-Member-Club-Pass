@@ -253,3 +253,11 @@ downloadBtn.addEventListener("click", () => {
     })
     .catch(err => console.error("Error generating PNG:", err));
 });
+
+/* ==========================
+   🆕 FONT STYLE HANDLER (FIX)
+   ========================== */
+fontStyleSelect.addEventListener("change", e => {
+  const selectedFont = e.target.value;
+  centerName.style.fontFamily = selectedFont;
+});
