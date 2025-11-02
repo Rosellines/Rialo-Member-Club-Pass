@@ -19,8 +19,6 @@
         <div class="perspective">
           <div id="card" class="card">
             <div class="card-body">
-                <div class="edge-layer"></div>
-                <div class="depth-layer"></div>
               <div class="glare"></div>
               <!-- Logo + Text -->
               <div class="logo">
@@ -30,12 +28,6 @@
                   <p class="rialo">RIALO</p>
                 </div>
               </div>
-<div class="card-body">
-</div>
-<div class="edge edge-top"></div>
-<div class="edge edge-bottom"></div>
-<div class="edge edge-left"></div>
-<div class="edge edge-right"></div>
               <!-- Center Info -->
               <div class="member-info">
                 <h2 id="center-name">MIKASA ENIX</h2>
@@ -74,6 +66,10 @@
 
         <label>Choose Theme</label>
         <div id="themes" class="themes"></div>
+
+        <label>Custom Gradient</label>
+        <input type="color" id="gradient-start" value="#ffffff" />
+        <input type="color" id="gradient-end" value="#000000" />
 
         <button id="download">Download as PNG</button>
         <p class="info">Hover over the card to see the 3D effect</p>

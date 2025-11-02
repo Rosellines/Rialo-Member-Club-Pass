@@ -49,6 +49,38 @@ const themes = [
     accent: "#ff6b00",
     textColor: "#ffffffff",
     logo: "logo.png"
+  },
+  {
+    id: "ocean",
+    name: "Ocean Blue",
+    gradient: "linear-gradient(135deg, #0077be 0%, #00a8cc 50%, #0077be 100%)",
+    accent: "#005f8a",
+    textColor: "#ffffff",
+    logo: "logo.png"
+  },
+  {
+    id: "sunset",
+    name: "Sunset Orange",
+    gradient: "linear-gradient(135deg, #ff4500 0%, #ffa500 50%, #ff4500 100%)",
+    accent: "#cc3300",
+    textColor: "#ffffff",
+    logo: "logo.png"
+  },
+  {
+    id: "lavender",
+    name: "Lavender Purple",
+    gradient: "linear-gradient(135deg, #b19cd9 0%, #dda0dd 50%, #b19cd9 100%)",
+    accent: "#9370db",
+    textColor: "#ffffff",
+    logo: "logo.png"
+  },
+  {
+    id: "crimson",
+    name: "Crimson Red",
+    gradient: "linear-gradient(135deg, #dc143c 0%, #ff6347 50%, #dc143c 100%)",
+    accent: "#b22222",
+    textColor: "#ffffff",
+    logo: "logo.png"
   }
 ];
 
@@ -64,6 +96,8 @@ const uploadSuccess = document.getElementById("upload-success");
 const themesContainer = document.getElementById("themes");
 const downloadBtn = document.getElementById("download");
 const fontStyleSelect = document.getElementById("font-style");
+const gradientStart = document.getElementById("gradient-start");
+const gradientEnd = document.getElementById("gradient-end");
 
 /* Depth & Edge Layers */
 const depthLayer = document.createElement("div");
@@ -94,6 +128,7 @@ function selectTheme(theme, btn) {
   document.querySelectorAll(".theme-btn").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
   updateCardTheme();
+  document.body.style.background = selectedTheme.accent;
 }
 
 /* ==========================
@@ -198,7 +233,7 @@ depthLayer.style.background = `
     radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255,255,255,0.45), rgba(255,255,255,0.05) 60%, transparent 100%)
   `;
   glare.style.mixBlendMode = "screen";
-  glare.style.opacity = 0.5;
+  glare.style.opacity = 0.7;
 });
 
 card.addEventListener("mouseenter", () => {
@@ -244,14 +279,46 @@ memberNameInput.addEventListener("input", e => {
    ========================== */
 downloadBtn.addEventListener("click", () => {
   const name = centerName.textContent.toLowerCase().replace(/\s/g, "-");
-  htmlToImage.toPng(card, { quality: 1, pixelRatio: 2, backgroundColor: "transparent" })
-    .then(dataUrl => {
-      const link = document.createElement("a");
-      link.download = `member-card-${name}.png`;
-      link.href = dataUrl;
-      link.click();
-    })
-    .catch(err => console.error("Error generating PNG:", err));
+  // Temporarily reset transforms to avoid cropping
+  const originalTransform = card.style.transform;
+  const originalBodyTransform = card.querySelector('.card-body').style.transform;
+  const originalDepthTransform = depthLayer.style.transform;
+  const originalEdgeTransform = edgeLayer.style.transform;
+  card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+  card.querySelector('.card-body').style.transform = 'translateZ(0px)';
+  depthLayer.style.transform = 'translateZ(0px)';
+  edgeLayer.style.transform = 'translateZ(-12px) rotateX(0deg) rotateY(0deg)';
+  // Wait for any images to load
+  const images = card.querySelectorAll('img');
+  const promises = Array.from(images).map(img => {
+    if (img.complete) return Promise.resolve();
+    return new Promise(resolve => {
+      img.onload = resolve;
+      img.onerror = resolve; // resolve even on error to not block
+    });
+  });
+  Promise.all(promises).then(() => {
+    htmlToImage.toPng(card, { quality: 1, pixelRatio: 2, backgroundColor: "transparent", width: card.offsetWidth, height: card.offsetHeight })
+      .then(dataUrl => {
+        const link = document.createElement("a");
+        link.download = `member-card-${name}.png`;
+        link.href = dataUrl;
+        link.click();
+        // Restore transforms
+        card.style.transform = originalTransform;
+        card.querySelector('.card-body').style.transform = originalBodyTransform;
+        depthLayer.style.transform = originalDepthTransform;
+        edgeLayer.style.transform = originalEdgeTransform;
+      })
+      .catch(err => {
+        console.error("Error generating PNG:", err);
+        // Restore transforms even on error
+        card.style.transform = originalTransform;
+        card.querySelector('.card-body').style.transform = originalBodyTransform;
+        depthLayer.style.transform = originalDepthTransform;
+        edgeLayer.style.transform = originalEdgeTransform;
+      });
+  });
 });
 
 /* ==========================
@@ -261,3 +328,17 @@ fontStyleSelect.addEventListener("change", e => {
   const selectedFont = e.target.value;
   centerName.style.fontFamily = selectedFont;
 });
+
+/* ==========================
+   🎨 CUSTOM GRADIENT HANDLER
+   ========================== */
+gradientStart.addEventListener("input", updateCustomGradient);
+gradientEnd.addEventListener("input", updateCustomGradient);
+
+function updateCustomGradient() {
+  const startColor = gradientStart.value;
+  const endColor = gradientEnd.value;
+  const customGradient = `linear-gradient(135deg, ${startColor} 0%, ${endColor} 50%, ${startColor} 100%)`;
+  card.querySelector(".card-body").style.background = customGradient;
+  document.body.style.background = startColor; // Use start color for body background
+}

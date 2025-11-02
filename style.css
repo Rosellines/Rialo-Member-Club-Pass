@@ -66,6 +66,7 @@ h1 {
   transform-style: preserve-3d;
   transform: translateZ(0px);
   transition: transform 0.25s ease;
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
 }
 
 /* 🌫️ Depth layer (hapus efek gelap) */
@@ -284,6 +285,11 @@ input[type="text"], input[type="file"] {
 .edge-layer {
   box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
   transform: translateZ(-12px);
+}
+
+/* Ensure card is fully captured in PNG */
+.card {
+  overflow: visible;
 }
 /* IDENTIK DENGAN ASLI - tambahan di bawah */
 * {
