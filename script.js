@@ -98,6 +98,8 @@ const downloadBtn = document.getElementById("download");
 const fontStyleSelect = document.getElementById("font-style");
 const gradientStart = document.getElementById("gradient-start");
 const gradientEnd = document.getElementById("gradient-end");
+const backgroundUpload = document.getElementById("background-upload");
+const backgroundUploadSuccess = document.getElementById("background-upload-success");
 
 /* Depth & Edge Layers */
 const depthLayer = document.createElement("div");
@@ -109,6 +111,7 @@ edgeLayer.classList.add("edge-layer");
 card.querySelector(".card-body").appendChild(edgeLayer);
 
 let selectedTheme = themes[0];
+let customBackground = null;
 
 /* ==========================
    🎨 THEME BUTTONS
@@ -142,7 +145,14 @@ function updateCardTheme() {
   const rialoText = card.querySelector(".rialo");
   const logoImg = card.querySelector(".logo img");
 
-  body.style.background = selectedTheme.gradient;
+  if (customBackground) {
+    body.style.backgroundImage = `url(${customBackground})`;
+    body.style.backgroundSize = "cover";
+    body.style.backgroundPosition = "center";
+    body.style.backgroundRepeat = "no-repeat";
+  } else {
+    body.style.background = selectedTheme.gradient;
+  }
 
   logoImg.style.opacity = 0;
   setTimeout(() => {
@@ -169,12 +179,14 @@ function updateCardTheme() {
   });
 
   /* 🎃 FIX FINAL */
-  if (selectedTheme.id === "halloween") {
+  if (selectedTheme.id === "halloween" && !customBackground) {
     body.classList.add("haunted-only");
     body.style.removeProperty("background");
   } else {
     body.classList.remove("haunted-only");
-    body.style.background = selectedTheme.gradient;
+    if (!customBackground) {
+      body.style.background = selectedTheme.gradient;
+    }
   }
   /* 🎃 Dekorasi Halloween hanya muncul di tema Haunted Night */
   const existingDecor = document.querySelector(".halloween-decor");
@@ -262,6 +274,22 @@ upload.addEventListener("change", e => {
     photo.src = reader.result;
     uploadSuccess.textContent = "✓ Photo uploaded successfully";
     uploadSuccess.style.color = "#34d399";
+  };
+  reader.readAsDataURL(file);
+});
+
+/* ==========================
+   🖼️ UPLOAD BACKGROUND IMAGE
+   ========================== */
+backgroundUpload.addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    customBackground = reader.result;
+    backgroundUploadSuccess.textContent = "✓ Background uploaded successfully";
+    backgroundUploadSuccess.style.color = "#34d399";
+    updateCardTheme();
   };
   reader.readAsDataURL(file);
 });
