@@ -90,6 +90,8 @@ const themes = [
 const card = document.getElementById("card");
 const memberNameInput = document.getElementById("member-name");
 const centerName = document.getElementById("center-name");
+const memberIdInput = document.getElementById("member-id");
+const memberIdDisplay = document.getElementById("member-id-display");
 const upload = document.getElementById("upload");
 const photo = document.getElementById("photo");
 const uploadSuccess = document.getElementById("upload-success");
@@ -300,6 +302,14 @@ backgroundUpload.addEventListener("change", e => {
 memberNameInput.addEventListener("input", e => {
   const value = e.target.value.toUpperCase() || "YOUR NAME";
   centerName.textContent = value;
+});
+
+/* ==========================
+   🆔 UPDATE MEMBER ID
+   ========================== */
+memberIdInput.addEventListener("input", e => {
+  const value = e.target.value || "00123";
+  memberIdDisplay.textContent = `Member ID: ${value}`;
 });
 
 /* ==========================

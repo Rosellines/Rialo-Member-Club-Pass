@@ -170,6 +170,13 @@ h1 {
   letter-spacing: 2px;
 }
 
+.member-id {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-top: 8px;
+  letter-spacing: 1px;
+}
+
 /* PHOTO */
 .bottom-right {
   position: absolute;
@@ -278,7 +285,8 @@ input[type="text"], input[type="file"] {
 .logo-text .club-pass,
 .logo-text .rialo,
 .member-info h2,
-.member-subtext {
+.member-subtext,
+.member-id {
   transition: color 0.3s ease-in-out;
 }
 /* sisi fisik kartu (ketebalan nyata) */
