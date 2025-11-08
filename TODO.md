@@ -24,3 +24,11 @@
 - [x] Edit index.html: Add color input fields for Member Name, Member Subtext, Member ID, and Date Join in the controls section
 - [x] Edit script.js: Add references to the new color inputs and event listeners to update the corresponding text colors on the card
 - [x] Test the implementation by running the site and verifying the color pickers change the text colors on the card
+
+# TODO: Add Flip Card Functionality
+
+## Steps to Complete
+- [x] Edit index.html: Add a "Flip Card" button in the controls section
+- [x] Edit script.js: Add reference to the flip button and event listener to toggle the "flipped" class on the card
+- [x] Edit style.css: Ensure the back side of the card is styled appropriately with a logo
+- [x] Test the implementation by running the site and verifying the card flips to show the back side

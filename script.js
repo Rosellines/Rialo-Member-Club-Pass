@@ -108,6 +108,7 @@ const nameColor = document.getElementById("name-color");
 const subtextColor = document.getElementById("subtext-color");
 const idColor = document.getElementById("id-color");
 const dateColor = document.getElementById("date-color");
+const flipCardBtn = document.getElementById("flip-card");
 
 /* Depth & Edge Layers */
 const depthLayer = document.createElement("div");
@@ -154,6 +155,7 @@ function selectTheme(theme, btn) {
    ========================== */
 function updateCardTheme() {
   const body = card.querySelector(".card-body");
+  const backBody = card.querySelector(".card-body.back");
   const nameText = card.querySelector(".member-info h2");
   const subText = card.querySelector(".member-subtext");
   const clubPassText = card.querySelector(".club-pass");
@@ -165,8 +167,13 @@ function updateCardTheme() {
     body.style.backgroundSize = "cover";
     body.style.backgroundPosition = "center";
     body.style.backgroundRepeat = "no-repeat";
+    backBody.style.backgroundImage = `url(${customBackground})`;
+    backBody.style.backgroundSize = "cover";
+    backBody.style.backgroundPosition = "center";
+    backBody.style.backgroundRepeat = "no-repeat";
   } else {
     body.style.background = selectedTheme.gradient;
+    backBody.style.background = selectedTheme.gradient;
   }
 
   logoImg.style.opacity = 0;
@@ -201,10 +208,14 @@ function updateCardTheme() {
   if (selectedTheme.id === "halloween" && !customBackground) {
     body.classList.add("haunted-only");
     body.style.removeProperty("background");
+    backBody.classList.add("haunted-only");
+    backBody.style.removeProperty("background");
   } else {
     body.classList.remove("haunted-only");
+    backBody.classList.remove("haunted-only");
     if (!customBackground) {
       body.style.background = selectedTheme.gradient;
+      backBody.style.background = selectedTheme.gradient;
     }
   }
   /* 🎃 Dekorasi Halloween hanya muncul di tema Haunted Night */
@@ -235,6 +246,8 @@ updateCardTheme();
 const bodyLayer = card.querySelector(".card-body");
 
 card.addEventListener("mousemove", e => {
+  if (card.classList.contains("flipped")) return;
+
   const rect = card.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
@@ -276,7 +289,11 @@ card.addEventListener("mouseenter", () => {
 
 card.addEventListener("mouseleave", () => {
   card.style.transition = "transform 0.5s ease";
-  card.style.transform = "rotateX(0deg) rotateY(0deg)";
+  if (card.classList.contains("flipped")) {
+    card.style.transform = "rotateY(180deg)";
+  } else {
+    card.style.transform = "rotateX(0deg) rotateY(0deg)";
+  }
   bodyLayer.style.transform = "translateZ(0px)";
   depthLayer.style.opacity = 0;
   edgeLayer.style.opacity = 0;
@@ -434,4 +451,11 @@ idColor.addEventListener("input", () => {
 
 dateColor.addEventListener("input", () => {
   joinDateDisplay.style.color = dateColor.value;
+});
+
+/* ==========================
+   🔄 FLIP CARD FUNCTIONALITY
+   ========================== */
+flipCardBtn.addEventListener("click", () => {
+  card.classList.toggle("flipped");
 });

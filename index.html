@@ -18,7 +18,7 @@
       <div class="card-container">
         <div class="perspective">
           <div id="card" class="card">
-            <div class="card-body">
+            <div class="card-body front">
               <div class="glare"></div>
               <!-- Logo + Text -->
               <div class="logo">
@@ -43,6 +43,11 @@
               </div>
 
               <div class="pattern"></div>
+            </div>
+            <div class="card-body back">
+              <div class="back-content">
+                <img src="logo.png" alt="Logo" class="back-logo">
+              </div>
             </div>
           </div>
         </div>
@@ -92,6 +97,7 @@
         <input type="color" id="gradient-start" value="#ffffff" />
         <input type="color" id="gradient-end" value="#000000" />
 
+        <button id="flip-card">Flip Card</button>
         <button id="download">Download as PNG</button>
         <p class="info">Hover over the card to see the 3D effect</p>
       </div>
