@@ -110,6 +110,7 @@ const idColor = document.getElementById("id-color");
 const dateColor = document.getElementById("date-color");
 const flipCardBtn = document.getElementById("flip-card");
 
+
 /* Depth & Edge Layers */
 const depthLayer = document.createElement("div");
 depthLayer.classList.add("depth-layer");
@@ -161,6 +162,7 @@ function updateCardTheme() {
   const clubPassText = card.querySelector(".club-pass");
   const rialoText = card.querySelector(".rialo");
   const logoImg = card.querySelector(".logo img");
+  const backLogoImg = card.querySelector(".back-logo img");
 
   if (customBackground) {
     body.style.backgroundImage = `url(${customBackground})`;
@@ -177,9 +179,12 @@ function updateCardTheme() {
   }
 
   logoImg.style.opacity = 0;
+  backLogoImg.style.opacity = 0;
   setTimeout(() => {
     logoImg.src = selectedTheme.logo;
+    backLogoImg.src = selectedTheme.logo;
     logoImg.onload = () => (logoImg.style.opacity = 1);
+    backLogoImg.onload = () => (backLogoImg.style.opacity = 1);
   }, 150);
 
   const color = selectedTheme.textColor;
@@ -454,9 +459,10 @@ dateColor.addEventListener("input", () => {
 });
 
 /* ==========================
-   🔄 FLIP CARD FUNCTIONALITY
+   🔄 FLIP CARD
    ========================== */
 flipCardBtn.addEventListener("click", () => {
-  card.style.transition = 'none';
   card.classList.toggle("flipped");
 });
+
+

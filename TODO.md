@@ -29,6 +29,8 @@
 
 ## Steps to Complete
 - [x] Edit index.html: Add a "Flip Card" button in the controls section
+- [x] Edit index.html: Add back side content to the card (logo and thank you message)
 - [x] Edit script.js: Add reference to the flip button and event listener to toggle the "flipped" class on the card
-- [x] Edit style.css: Ensure the back side of the card is styled appropriately with a logo
+- [x] Edit script.js: Update updateCardTheme to handle back side logo and background
+- [x] Edit style.css: Add styles for the back side content and ensure proper 3D flip
 - [x] Test the implementation by running the site and verifying the card flips to show the back side
