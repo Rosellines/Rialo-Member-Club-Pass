@@ -121,6 +121,14 @@ card.querySelector(".card-body").appendChild(edgeLayer);
 let selectedTheme = themes[0];
 let customBackground = null;
 
+// Helper function to convert hex to rgba
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 /* ==========================
    🎨 THEME BUTTONS
    ========================== */
@@ -171,6 +179,10 @@ function updateCardTheme() {
   [nameText, subText, clubPassText, rialoText].forEach(el => {
     el.style.color = color;
   });
+
+  // Update box shadow to follow theme accent color
+  const accentRgba = hexToRgba(selectedTheme.accent, 0.3);
+  body.style.boxShadow = `0 0 10px ${accentRgba}`;
 
   const rgb = color.replace("#", "");
   const r = parseInt(rgb.substring(0, 2), 16);
@@ -228,16 +240,16 @@ card.addEventListener("mousemove", e => {
   const y = e.clientY - rect.top;
   const centerX = rect.width / 2;
   const centerY = rect.height / 2;
-  const rotateX = ((y - centerY) / centerY) * -12;
-  const rotateY = ((x - centerX) / centerX) * 12;
+  const rotateX = ((y - centerY) / centerY) * -6;
+  const rotateY = ((x - centerX) / centerX) * 6;
 
   card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
   // Ketebalan fisik (translateZ)
-  const depth = ((y - centerY) / centerY) * 18;
+  const depth = ((y - centerY) / centerY) * 9;
   bodyLayer.style.transform = `translateZ(${Math.abs(depth)}px)`;
   depthLayer.style.transform = `translateZ(${Math.abs(depth) * 1.4}px)`;
-  edgeLayer.style.transform = `translateZ(20px) rotateX(${rotateX / 4}deg) rotateY(${rotateY / 4}deg)`;
+  edgeLayer.style.transform = `translateZ(10px) rotateX(${rotateX / 4}deg) rotateY(${rotateY / 4}deg)`;
 
  // Efek highlight cahaya mengikuti posisi
 const lightX = (x / rect.width) * 100;
