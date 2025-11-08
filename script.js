@@ -128,7 +128,6 @@ themes.forEach(theme => {
   const btn = document.createElement("button");
   btn.classList.add("theme-btn");
   btn.style.background = theme.gradient;
-  btn.textContent = theme.name;
   btn.onclick = () => selectTheme(theme, btn);
   themesContainer.appendChild(btn);
 });
