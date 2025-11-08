@@ -459,7 +459,4 @@ dateColor.addEventListener("input", () => {
 flipCardBtn.addEventListener("click", () => {
   card.style.transition = 'none';
   card.classList.toggle("flipped");
-  setTimeout(() => {
-    card.style.transition = 'transform 0.1s ease';
-  }, 0);
 });
