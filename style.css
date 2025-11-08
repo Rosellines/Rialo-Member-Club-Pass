@@ -29,7 +29,7 @@ h1 {
 
 .content {
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1fr 400px 200px;
   gap: 60px;
   align-items: start;
   justify-content: center;
@@ -249,9 +249,23 @@ input[type="text"], input[type="file"] {
 /* THEMES */
 .themes {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 10px;
   margin-bottom: 20px;
+}
+
+.themes-section {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid #334155;
+  text-align: left;
+}
+
+.themes-section label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
 }
 
 .theme-btn {
