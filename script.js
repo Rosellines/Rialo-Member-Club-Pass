@@ -92,6 +92,8 @@ const memberNameInput = document.getElementById("member-name");
 const centerName = document.getElementById("center-name");
 const memberIdInput = document.getElementById("member-id");
 const memberIdDisplay = document.getElementById("member-id-display");
+const joinDateInput = document.getElementById("join-date");
+const joinDateDisplay = document.getElementById("join-date-display");
 const upload = document.getElementById("upload");
 const photo = document.getElementById("photo");
 const uploadSuccess = document.getElementById("upload-success");
@@ -102,6 +104,10 @@ const gradientStart = document.getElementById("gradient-start");
 const gradientEnd = document.getElementById("gradient-end");
 const backgroundUpload = document.getElementById("background-upload");
 const backgroundUploadSuccess = document.getElementById("background-upload-success");
+const nameColor = document.getElementById("name-color");
+const subtextColor = document.getElementById("subtext-color");
+const idColor = document.getElementById("id-color");
+const dateColor = document.getElementById("date-color");
 
 /* Depth & Edge Layers */
 const depthLayer = document.createElement("div");
@@ -313,6 +319,24 @@ memberIdInput.addEventListener("input", e => {
 });
 
 /* ==========================
+   📅 UPDATE JOIN DATE
+   ========================== */
+joinDateInput.addEventListener("input", e => {
+  const value = e.target.value;
+  if (value) {
+    const selectedDate = new Date(value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const isExpired = selectedDate < today;
+    joinDateDisplay.textContent = `Date Join: ${value}`;
+    joinDateDisplay.style.color = isExpired ? "#ff6b6b" : ""; // Red if expired, else default
+  } else {
+    joinDateDisplay.textContent = " in: --";
+    joinDateDisplay.style.color = "";
+  }
+});
+
+/* ==========================
    💾 DOWNLOAD PNG
    ========================== */
 downloadBtn.addEventListener("click", () => {
@@ -380,3 +404,23 @@ function updateCustomGradient() {
   card.querySelector(".card-body").style.background = customGradient;
   document.body.style.background = startColor; // Use start color for body background
 }
+
+/* ==========================
+   🎨 CUSTOM TEXT COLORS
+   ========================== */
+nameColor.addEventListener("input", () => {
+  centerName.style.color = nameColor.value;
+});
+
+subtextColor.addEventListener("input", () => {
+  const subText = card.querySelector(".member-subtext");
+  subText.style.color = subtextColor.value;
+});
+
+idColor.addEventListener("input", () => {
+  memberIdDisplay.style.color = idColor.value;
+});
+
+dateColor.addEventListener("input", () => {
+  joinDateDisplay.style.color = dateColor.value;
+});
