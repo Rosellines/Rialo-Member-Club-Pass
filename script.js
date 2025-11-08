@@ -258,16 +258,16 @@ card.addEventListener("mousemove", e => {
   const y = e.clientY - rect.top;
   const centerX = rect.width / 2;
   const centerY = rect.height / 2;
-  const rotateX = ((y - centerY) / centerY) * -6;
-  const rotateY = ((x - centerX) / centerX) * 6;
+  const rotateX = ((y - centerY) / centerY) * -3;
+  const rotateY = ((x - centerX) / centerX) * 3;
 
   card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
   // Ketebalan fisik (translateZ)
-  const depth = ((y - centerY) / centerY) * 9;
+  const depth = ((y - centerY) / centerY) * 4.5;
   bodyLayer.style.transform = `translateZ(${Math.abs(depth)}px)`;
   depthLayer.style.transform = `translateZ(${Math.abs(depth) * 1.4}px)`;
-  edgeLayer.style.transform = `translateZ(10px) rotateX(${rotateX / 4}deg) rotateY(${rotateY / 4}deg)`;
+  edgeLayer.style.transform = `translateZ(5px) rotateX(${rotateX / 4}deg) rotateY(${rotateY / 4}deg)`;
 
  // Efek highlight cahaya mengikuti posisi
 const lightX = (x / rect.width) * 100;
