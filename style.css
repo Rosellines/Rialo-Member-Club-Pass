@@ -258,8 +258,8 @@ input[type="color"] {
 
 /* THEMES */
 .themes {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  display: flex;
+  flex-direction: row;
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -498,4 +498,23 @@ input[type="text"], input[type="file"] { width: 100%; padding: 8px 12px; backgro
   -webkit-background-clip: text;  
   -webkit-text-fill-color: transparent;
   color: transparent;
+}
+/* --- POSISI THEME: TARUH HORIZONTAL DI BAWAH KARTU --- */
+.themes-section {
+  /* tempatkan themes-section di kolom 1 (kolom kartu) dan baris 2 (di bawah kartu) */
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  justify-self: center; /* pusatkan di kolom kartu */
+  width: 650px; /* samakan dengan lebar kartu agar sejajar */
+  margin-top: -210px;
+  text-align: left; /* biar label dan konten tetap rapi */
+}
+
+/* Pastikan tombol tema tetap berjajar horisontal (sudah ada), tapi pertahankan gap kecil */
+.themes {
+  display: flex;      /* sudah ada, tapi ini memastikan tetap horizontal */
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
 }
