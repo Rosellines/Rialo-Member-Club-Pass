@@ -51,8 +51,9 @@ h1 {
   position: relative;
   margin: 0 auto;
   transform: rotateX(0deg) rotateY(0deg);
-  transition: transform 0.3s ease;
+  transition: transform 0.1s ease;
   box-shadow: none;
+  will-change: transform;
 }
 
 .card.flipped {
@@ -163,11 +164,12 @@ h1 {
 /* MEMBER INFO */
 .member-info {
   position: absolute;
-  top: 83%;
-  left: 35%;
+  top: 80%;
+  left: 40%;
   transform: translate(-50%, -50%);
   text-align: left;
   z-index: 3;
+  width: 200px; /* Fixed width to prevent shifting */
 }
 
 .member-info h2 {

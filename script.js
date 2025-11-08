@@ -359,7 +359,7 @@ joinDateInput.addEventListener("input", e => {
     joinDateDisplay.textContent = `Date Join: ${value}`;
     joinDateDisplay.style.color = isExpired ? "#ff6b6b" : ""; // Red if expired, else default
   } else {
-    joinDateDisplay.textContent = " in: --";
+    joinDateDisplay.textContent = "Date Join: --";
     joinDateDisplay.style.color = "";
   }
 });
