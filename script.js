@@ -108,8 +108,7 @@ const nameColor = document.getElementById("name-color");
 const subtextColor = document.getElementById("subtext-color");
 const idColor = document.getElementById("id-color");
 const dateColor = document.getElementById("date-color");
-const flipCardBtn = document.getElementById("flip-card");
-
+// flipCardBtn intentionally not used (flip JS removed per request)
 
 /* Depth & Edge Layers */
 const depthLayer = document.createElement("div");
@@ -125,10 +124,36 @@ let customBackground = null;
 
 // Helper function to convert hex to rgba
 function hexToRgba(hex, alpha) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  try {
+    // normalize hex (support #RRGGBB, #RRGGBBAA, #RGB, #RGBA)
+    const normalized = normalizeHex(hex);
+    const r = parseInt(normalized.slice(0, 2), 16);
+    const g = parseInt(normalized.slice(2, 4), 16);
+    const b = parseInt(normalized.slice(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  } catch (e) {
+    // fallback to whiteish
+    return `rgba(255,255,255,${alpha})`;
+  }
+}
+
+// Normalize hex color to 6-digit hex string without '#'
+function normalizeHex(input) {
+  if (!input || typeof input !== "string") throw new Error("Invalid color");
+  let hex = input.trim().replace("#", "");
+  // If 8-digit (RRGGBBAA), drop alpha for calculations
+  if (hex.length === 8) hex = hex.slice(0, 6);
+  // If 4-digit (#RGBA) -> expand to 8-digit then drop alpha
+  if (hex.length === 4) {
+    hex = hex.split("").slice(0, 3).map(ch => ch + ch).join("");
+  }
+  // If 3-digit -> expand
+  if (hex.length === 3) {
+    hex = hex.split("").map(ch => ch + ch).join("");
+  }
+  // if now not 6 -> throw
+  if (hex.length !== 6) throw new Error("Unsupported color format");
+  return hex.toLowerCase();
 }
 
 /* ==========================
@@ -141,7 +166,7 @@ themes.forEach(theme => {
   btn.onclick = () => selectTheme(theme, btn);
   themesContainer.appendChild(btn);
 });
-themesContainer.children[0].classList.add("active");
+if (themesContainer.children[0]) themesContainer.children[0].classList.add("active");
 
 function selectTheme(theme, btn) {
   selectedTheme = theme;
@@ -169,15 +194,18 @@ function updateCardTheme() {
     body.style.backgroundSize = "cover";
     body.style.backgroundPosition = "center";
     body.style.backgroundRepeat = "no-repeat";
-    backBody.style.backgroundImage = `url(${customBackground})`;
-    backBody.style.backgroundSize = "cover";
-    backBody.style.backgroundPosition = "center";
-    backBody.style.backgroundRepeat = "no-repeat";
+    if (backBody) {
+      backBody.style.backgroundImage = `url(${customBackground})`;
+      backBody.style.backgroundSize = "cover";
+      backBody.style.backgroundPosition = "center";
+      backBody.style.backgroundRepeat = "no-repeat";
+    }
   } else {
     body.style.background = selectedTheme.gradient;
-    backBody.style.background = selectedTheme.gradient;
+    if (backBody) backBody.style.background = selectedTheme.gradient;
   }
 
+  // fade swap logos
   logoImg.style.opacity = 0;
   backLogoImg.style.opacity = 0;
   setTimeout(() => {
@@ -189,38 +217,45 @@ function updateCardTheme() {
 
   const color = selectedTheme.textColor;
   [nameText, subText, clubPassText, rialoText].forEach(el => {
-    el.style.color = color;
+    if (el) el.style.color = color;
   });
 
   // Update box shadow to follow theme accent color
   const accentRgba = hexToRgba(selectedTheme.accent, 0.3);
   body.style.boxShadow = `0 0 10px ${accentRgba}`;
 
-  const rgb = color.replace("#", "");
-  const r = parseInt(rgb.substring(0, 2), 16);
-  const g = parseInt(rgb.substring(2, 4), 16);
-  const b = parseInt(rgb.substring(4, 6), 16);
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  const textShadow =
-    brightness > 128
-      ? "0 1.5px 0px rgba(0,0,0,0.45)"
-      : "0 1.5px 0px rgba(255,255,255,0.25)";
-     [nameText, subText, clubPassText, rialoText].forEach(el => {
-    el.style.textShadow = textShadow;
-  });
+  // Calculate brightness safely
+  try {
+    const hex = normalizeHex(color);
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    const textShadow =
+      brightness > 128
+        ? "0 1.5px 0px rgba(0,0,0,0.45)"
+        : "0 1.5px 0px rgba(255,255,255,0.25)";
+    [nameText, subText, clubPassText, rialoText].forEach(el => {
+      if (el) el.style.textShadow = textShadow;
+    });
+  } catch (e) {
+    // ignore if color parse failed
+  }
 
   /* 🎃 FIX FINAL */
   if (selectedTheme.id === "halloween" && !customBackground) {
     body.classList.add("haunted-only");
     body.style.removeProperty("background");
-    backBody.classList.add("haunted-only");
-    backBody.style.removeProperty("background");
+    if (backBody) {
+      backBody.classList.add("haunted-only");
+      backBody.style.removeProperty("background");
+    }
   } else {
     body.classList.remove("haunted-only");
-    backBody.classList.remove("haunted-only");
+    if (backBody) backBody.classList.remove("haunted-only");
     if (!customBackground) {
       body.style.background = selectedTheme.gradient;
-      backBody.style.background = selectedTheme.gradient;
+      if (backBody) backBody.style.background = selectedTheme.gradient;
     }
   }
   /* 🎃 Dekorasi Halloween hanya muncul di tema Haunted Night */
@@ -240,7 +275,6 @@ function updateCardTheme() {
   } else {
     if (existingDecor) existingDecor.remove();
   }
-
 }
 
 updateCardTheme();
@@ -251,8 +285,8 @@ updateCardTheme();
 const bodyLayer = card.querySelector(".card-body");
 
 card.addEventListener("mousemove", e => {
-  if (card.classList.contains("flipped")) return;
-
+  // NOTE: flipping logic removed as requested; if the card is visually flipped via CSS,
+  // we leave it to CSS but downloads will temporarily neutralize it when capturing.
   const rect = card.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
@@ -261,45 +295,44 @@ card.addEventListener("mousemove", e => {
   const rotateX = ((y - centerY) / centerY) * -3;
   const rotateY = ((x - centerX) / centerX) * 3;
 
+  // Only apply 3D hover effect via inline transform (doesn't toggle classes)
   card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
   // Ketebalan fisik (translateZ)
   const depth = ((y - centerY) / centerY) * 4.5;
-  bodyLayer.style.transform = `translateZ(${Math.abs(depth)}px)`;
+  if (bodyLayer) bodyLayer.style.transform = `translateZ(${Math.abs(depth)}px)`;
   depthLayer.style.transform = `translateZ(${Math.abs(depth) * 1.4}px)`;
   edgeLayer.style.transform = `translateZ(5px) rotateX(${rotateX / 4}deg) rotateY(${rotateY / 4}deg)`;
 
  // Efek highlight cahaya mengikuti posisi
-const lightX = (x / rect.width) * 100;
-const lightY = (y / rect.height) * 100;
-depthLayer.style.background = `
-  radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255, 255, 255, 0.05), transparent)
-`;
+ const lightX = (x / rect.width) * 100;
+ const lightY = (y / rect.height) * 100;
+ depthLayer.style.background = `
+   radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255, 255, 255, 0.05), transparent)
+ `;
 
   // Efek glass glare (pantulan kaca)
   const glare = card.querySelector('.glare');
-  glare.style.background = `
-    radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255,255,255,0.45), rgba(255,255,255,0.05) 60%, transparent 100%)
-  `;
-  glare.style.mixBlendMode = "screen";
-  glare.style.opacity = 0.7;
+  if (glare) {
+    glare.style.background = `
+      radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255,255,255,0.45), rgba(255,255,255,0.05) 60%, transparent 100%)
+    `;
+    glare.style.mixBlendMode = "screen";
+    glare.style.opacity = 0.7;
+  }
 });
 
 card.addEventListener("mouseenter", () => {
   card.style.transition = "transform 0.15s ease-out";
-  bodyLayer.style.transition = "transform 0.2s ease";
+  if (bodyLayer) bodyLayer.style.transition = "transform 0.2s ease";
   depthLayer.style.opacity = 1;
   edgeLayer.style.opacity = 1;
 });
 
 card.addEventListener("mouseleave", () => {
   card.style.transition = "transform 0.5s ease";
-  if (card.classList.contains("flipped")) {
-    card.style.transform = "rotateY(180deg)";
-  } else {
-    card.style.transform = "rotateX(0deg) rotateY(0deg)";
-  }
-  bodyLayer.style.transform = "translateZ(0px)";
+  card.style.transform = "rotateX(0deg) rotateY(0deg)";
+  if (bodyLayer) bodyLayer.style.transform = "translateZ(0px)";
   depthLayer.style.opacity = 0;
   edgeLayer.style.opacity = 0;
 });
@@ -372,49 +405,74 @@ joinDateInput.addEventListener("input", e => {
 /* ==========================
    💾 DOWNLOAD PNG
    ========================== */
+/* ==========================
+   💾 DOWNLOAD PNG (FINAL FIX)
+   ========================== */
 downloadBtn.addEventListener("click", () => {
-  const name = centerName.textContent.toLowerCase().replace(/\s/g, "-");
-  // Temporarily reset transforms to avoid cropping
+  const name = centerName.textContent.toLowerCase().replace(/\s/g, "-") || "member-card";
+
+  // Simpan state awal
+  const hadFlippedClass = card.classList.contains("flipped");
   const originalTransform = card.style.transform;
-  const originalBodyTransform = card.querySelector('.card-body').style.transform;
-  const originalDepthTransform = depthLayer.style.transform;
-  const originalEdgeTransform = edgeLayer.style.transform;
-  card.style.transform = 'rotateX(0deg) rotateY(0deg)';
-  card.querySelector('.card-body').style.transform = 'translateZ(0px)';
-  depthLayer.style.transform = 'translateZ(0px)';
-  edgeLayer.style.transform = 'translateZ(-12px) rotateX(0deg) rotateY(0deg)';
-  // Wait for any images to load
-  const images = card.querySelectorAll('img');
-  const promises = Array.from(images).map(img => {
-    if (img.complete) return Promise.resolve();
-    return new Promise(resolve => {
-      img.onload = resolve;
-      img.onerror = resolve; // resolve even on error to not block
-    });
-  });
-  Promise.all(promises).then(() => {
-    htmlToImage.toPng(card, { quality: 1, pixelRatio: 2, backgroundColor: "transparent", width: card.offsetWidth, height: card.offsetHeight })
-      .then(dataUrl => {
-        const link = document.createElement("a");
-        link.download = `member-card-${name}.png`;
-        link.href = dataUrl;
-        link.click();
-        // Restore transforms
-        card.style.transform = originalTransform;
-        card.querySelector('.card-body').style.transform = originalBodyTransform;
-        depthLayer.style.transform = originalDepthTransform;
-        edgeLayer.style.transform = originalEdgeTransform;
+  const front = card.querySelector(".card-body.front");
+  const back = card.querySelector(".card-body.back");
+
+  // Hilangkan efek flip & tampilkan sisi depan secara paksa
+  card.classList.remove("flipped");
+  card.style.transform = "none";
+  if (front) {
+    front.style.transform = "rotateY(0deg)";
+    front.style.backfaceVisibility = "visible";
+    front.style.zIndex = "2";
+  }
+  if (back) {
+    back.style.transform = "rotateY(180deg)";
+    back.style.backfaceVisibility = "hidden";
+    back.style.zIndex = "1";
+  }
+
+  // Pastikan semua gambar sudah dimuat
+  const images = card.querySelectorAll("img");
+  const loadPromises = Array.from(images).map(img =>
+    img.complete ? Promise.resolve() : new Promise(res => {
+      img.onload = res;
+      img.onerror = res;
+    })
+  );
+
+  Promise.all(loadPromises)
+    .then(() =>
+      htmlToImage.toPng(card, {
+        quality: 1,
+        pixelRatio: 2,
+        backgroundColor: "transparent",
       })
-      .catch(err => {
-        console.error("Error generating PNG:", err);
-        // Restore transforms even on error
-        card.style.transform = originalTransform;
-        card.querySelector('.card-body').style.transform = originalBodyTransform;
-        depthLayer.style.transform = originalDepthTransform;
-        edgeLayer.style.transform = originalEdgeTransform;
-      });
-  });
+    )
+    .then(dataUrl => {
+      const link = document.createElement("a");
+      link.download = `member-card-${name}.png`;
+      link.href = dataUrl;
+      link.click();
+    })
+    .catch(err => console.error("Error generating PNG:", err))
+    .finally(() => {
+      // Kembalikan state seperti semula
+      if (hadFlippedClass) card.classList.add("flipped");
+      card.style.transform = originalTransform || "";
+
+      if (front) {
+        front.style.transform = "";
+        front.style.backfaceVisibility = "";
+        front.style.zIndex = "";
+      }
+      if (back) {
+        back.style.transform = "";
+        back.style.backfaceVisibility = "";
+        back.style.zIndex = "";
+      }
+    });
 });
+
 
 /* ==========================
    🆕 FONT STYLE HANDLER (FIX)
@@ -434,7 +492,8 @@ function updateCustomGradient() {
   const startColor = gradientStart.value;
   const endColor = gradientEnd.value;
   const customGradient = `linear-gradient(135deg, ${startColor} 0%, ${endColor} 50%, ${startColor} 100%)`;
-  card.querySelector(".card-body").style.background = customGradient;
+  const firstBody = card.querySelector(".card-body");
+  if (firstBody) firstBody.style.background = customGradient;
   document.body.style.background = startColor; // Use start color for body background
 }
 
@@ -447,7 +506,7 @@ nameColor.addEventListener("input", () => {
 
 subtextColor.addEventListener("input", () => {
   const subText = card.querySelector(".member-subtext");
-  subText.style.color = subtextColor.value;
+  if (subText) subText.style.color = subtextColor.value;
 });
 
 idColor.addEventListener("input", () => {
@@ -461,8 +520,4 @@ dateColor.addEventListener("input", () => {
 /* ==========================
    🔄 FLIP CARD
    ========================== */
-flipCardBtn.addEventListener("click", () => {
-  card.classList.toggle("flipped");
-});
-
-
+// Flip behavior intentionally removed per user request (button remains but does nothing)
