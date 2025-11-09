@@ -393,7 +393,15 @@ joinDateInput.addEventListener("input", e => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const isExpired = selectedDate < today;
-    joinDateDisplay.textContent = `Date Join: ${value}`;
+
+    // Format date to dd/MMM/yy
+    const day = selectedDate.getDate().toString().padStart(2, '0');
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = monthNames[selectedDate.getMonth()];
+    const year = selectedDate.getFullYear().toString().slice(-2);
+    const formattedDate = `${day}/${month}/${year}`;
+
+    joinDateDisplay.textContent = `Date Join: ${formattedDate}`;
     joinDateDisplay.style.color = isExpired ? "#ff6b6b" : ""; // Red if expired, else default
   } else {
     joinDateDisplay.textContent = "Date Join: --";
