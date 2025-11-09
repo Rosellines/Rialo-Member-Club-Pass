@@ -1,8 +1,6 @@
-# TODO: Make Card Responsive for Consistent Download Across Screen Sizes
+# TODO: Fix Inconsistent Download Results Across Screen Sizes
 
 ## Steps to Complete
-- [x] Add media query for mobile (<768px): Adjust .card to 400px width/height, reduce font sizes proportionally, adjust margins and grid gaps
-- [x] Add media query for tablet (768px-1199px): Adjust .card to 550px width/height, medium font sizes, adjust margins
-- [x] Add media query for desktop (>=1200px): Keep .card at 650px width/height, full font sizes, original margins
-- [x] Update .content grid to be more flexible if needed
-- [x] Test the responsive layout on different screen sizes (simulate 13" phone, 17" laptop, 20"+ desktop) to verify the card fits and download matches preview
+- [x] Edit script.js: Increase pixelRatio from 2 to 4 in the downloadBtn event listener for higher resolution capture
+- [x] Edit style.css: Change font-size for key text elements from rem to px (e.g., .member-info h2: 1.4rem -> 22px, .member-subtext: 1rem -> 16px, .member-id: 0.9rem -> 14px, .join-date: 0.9rem -> 14px, .club-pass: 2rem -> 32px, .rialo: 0.9rem -> 14px, .back-text: 1.2rem -> 19px)
+- [ ] Test the download on different screen sizes (20", 17", 13") to verify text precision and consistency
