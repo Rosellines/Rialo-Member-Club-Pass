@@ -108,7 +108,7 @@ const nameColor = document.getElementById("name-color");
 const subtextColor = document.getElementById("subtext-color");
 const idColor = document.getElementById("id-color");
 const dateColor = document.getElementById("date-color");
-// flipCardBtn intentionally not used (flip JS removed per request)
+
 
 /* Depth & Edge Layers */
 const depthLayer = document.createElement("div");
@@ -280,13 +280,13 @@ function updateCardTheme() {
 updateCardTheme();
 
 /* ==========================
-   🧭 3D DEPTH — FISIK
+   🧭 3D DEPTH — FISIK (FIXED)
    ========================== */
 const bodyLayer = card.querySelector(".card-body");
 
 card.addEventListener("mousemove", e => {
-  // NOTE: flipping logic removed as requested; if the card is visually flipped via CSS,
-  // we leave it to CSS but downloads will temporarily neutralize it when capturing.
+  if (card.classList.contains("flipped")) return; // ❗ skip kalau lagi flip
+
   const rect = card.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
@@ -295,23 +295,19 @@ card.addEventListener("mousemove", e => {
   const rotateX = ((y - centerY) / centerY) * -3;
   const rotateY = ((x - centerX) / centerX) * 3;
 
-  // Only apply 3D hover effect via inline transform (doesn't toggle classes)
   card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-  // Ketebalan fisik (translateZ)
   const depth = ((y - centerY) / centerY) * 4.5;
   if (bodyLayer) bodyLayer.style.transform = `translateZ(${Math.abs(depth)}px)`;
   depthLayer.style.transform = `translateZ(${Math.abs(depth) * 1.4}px)`;
   edgeLayer.style.transform = `translateZ(5px) rotateX(${rotateX / 4}deg) rotateY(${rotateY / 4}deg)`;
 
- // Efek highlight cahaya mengikuti posisi
- const lightX = (x / rect.width) * 100;
- const lightY = (y / rect.height) * 100;
- depthLayer.style.background = `
-   radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255, 255, 255, 0.05), transparent)
- `;
+  const lightX = (x / rect.width) * 100;
+  const lightY = (y / rect.height) * 100;
+  depthLayer.style.background = `
+    radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255, 255, 255, 0.05), transparent)
+  `;
 
-  // Efek glass glare (pantulan kaca)
   const glare = card.querySelector('.glare');
   if (glare) {
     glare.style.background = `
@@ -323,6 +319,7 @@ card.addEventListener("mousemove", e => {
 });
 
 card.addEventListener("mouseenter", () => {
+  if (card.classList.contains("flipped")) return; // ❗ skip kalau lagi flip
   card.style.transition = "transform 0.15s ease-out";
   if (bodyLayer) bodyLayer.style.transition = "transform 0.2s ease";
   depthLayer.style.opacity = 1;
@@ -330,12 +327,14 @@ card.addEventListener("mouseenter", () => {
 });
 
 card.addEventListener("mouseleave", () => {
+  if (card.classList.contains("flipped")) return; // ❗ skip kalau lagi flip
   card.style.transition = "transform 0.5s ease";
   card.style.transform = "rotateX(0deg) rotateY(0deg)";
   if (bodyLayer) bodyLayer.style.transform = "translateZ(0px)";
   depthLayer.style.opacity = 0;
   edgeLayer.style.opacity = 0;
 });
+
 
 /* ==========================
    📸 UPLOAD IMAGE
@@ -402,36 +401,25 @@ joinDateInput.addEventListener("input", e => {
   }
 });
 
+
+
 /* ==========================
-   💾 DOWNLOAD PNG
-   ========================== */
-/* ==========================
-   💾 DOWNLOAD PNG (FINAL FIX)
+   💾 DOWNLOAD PNG (FINAL ORIENT FIX)
    ========================== */
 downloadBtn.addEventListener("click", () => {
   const name = centerName.textContent.toLowerCase().replace(/\s/g, "-") || "member-card";
+  const isFlipped = card.classList.contains("flipped");
 
-  // Simpan state awal
-  const hadFlippedClass = card.classList.contains("flipped");
-  const originalTransform = card.style.transform;
+  // Tambahkan class no-3d agar htmlToImage menangkap tampilan datar, tidak mirror
+  document.documentElement.classList.add("no-3d");
+
+  // Pastikan hanya sisi yang aktif terlihat
   const front = card.querySelector(".card-body.front");
   const back = card.querySelector(".card-body.back");
+  front.style.display = isFlipped ? "none" : "block";
+  back.style.display = isFlipped ? "block" : "none";
 
-  // Hilangkan efek flip & tampilkan sisi depan secara paksa
-  card.classList.remove("flipped");
-  card.style.transform = "none";
-  if (front) {
-    front.style.transform = "rotateY(0deg)";
-    front.style.backfaceVisibility = "visible";
-    front.style.zIndex = "2";
-  }
-  if (back) {
-    back.style.transform = "rotateY(180deg)";
-    back.style.backfaceVisibility = "hidden";
-    back.style.zIndex = "1";
-  }
-
-  // Pastikan semua gambar sudah dimuat
+  // Tunggu semua gambar selesai load
   const images = card.querySelectorAll("img");
   const loadPromises = Array.from(images).map(img =>
     img.complete ? Promise.resolve() : new Promise(res => {
@@ -441,37 +429,22 @@ downloadBtn.addEventListener("click", () => {
   );
 
   Promise.all(loadPromises)
-    .then(() =>
-      htmlToImage.toPng(card, {
-        quality: 1,
-        pixelRatio: 2,
-        backgroundColor: "transparent",
-      })
-    )
+    .then(() => htmlToImage.toPng(card, { quality: 1, pixelRatio: 2, backgroundColor: "transparent" }))
     .then(dataUrl => {
       const link = document.createElement("a");
       link.download = `member-card-${name}.png`;
       link.href = dataUrl;
       link.click();
     })
-    .catch(err => console.error("Error generating PNG:", err))
     .finally(() => {
-      // Kembalikan state seperti semula
-      if (hadFlippedClass) card.classList.add("flipped");
-      card.style.transform = originalTransform || "";
-
-      if (front) {
-        front.style.transform = "";
-        front.style.backfaceVisibility = "";
-        front.style.zIndex = "";
-      }
-      if (back) {
-        back.style.transform = "";
-        back.style.backfaceVisibility = "";
-        back.style.zIndex = "";
-      }
+      // Kembalikan semua ke semula
+      document.documentElement.classList.remove("no-3d");
+      front.style.display = "";
+      back.style.display = "";
     });
 });
+
+
 
 
 /* ==========================
@@ -518,6 +491,37 @@ dateColor.addEventListener("input", () => {
 });
 
 /* ==========================
-   🔄 FLIP CARD
+   🌀 FLIP CARD (STABLE & FAST) — FIX INLINE TRANSFORM
    ========================== */
-// Flip behavior intentionally removed per user request (button remains but does nothing)
+document.addEventListener("DOMContentLoaded", () => {
+  const flipCardBtn = document.getElementById("flip-card");
+  const card = document.getElementById("card");
+  if (!flipCardBtn || !card) return;
+
+  flipCardBtn.addEventListener("click", () => {
+    // clear any hover inline transforms that override .flipped
+    card.style.transform = "none";
+    if (typeof bodyLayer !== "undefined" && bodyLayer) bodyLayer.style.transform = "translateZ(0px)";
+    if (typeof depthLayer !== "undefined" && depthLayer) depthLayer.style.opacity = 0;
+    if (typeof edgeLayer !== "undefined" && edgeLayer) edgeLayer.style.opacity = 0;
+
+    // force reflow so the browser applies the inline reset before toggling class
+    // (reads layout property to flush changes)
+    void card.offsetWidth;
+
+    // toggle flipped class (CSS .card.flipped will now take effect)
+    card.classList.toggle("flipped");
+
+    // ensure a smooth transform duration
+    card.style.transition = "transform 0.35s cubic-bezier(0.4, 0.1, 0.2, 1)";
+
+    // temporarily disable pointer events to avoid hover racing
+    card.style.pointerEvents = "none";
+    setTimeout(() => {
+      card.style.pointerEvents = "auto";
+      // optional: after flip completes, clear inline transform so future CSS takes precedence cleanly
+      card.style.transform = "";
+    }, 380); // slightly longer than transition
+  });
+});
+

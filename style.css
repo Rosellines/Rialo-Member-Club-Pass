@@ -499,5 +499,38 @@ input[type="color"] {
   align-items: center;
   justify-content: flex-start;
 }
+.card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+  will-change: transform;
+}
 
+.card-body {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.card-body.back {
+  transform: rotateY(180deg);
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+/* ===== FIX: no mirror saat download back side ===== */
+.no-3d .card,
+.no-3d .card-body,
+.no-3d .card-body.front,
+.no-3d .card-body.back {
+  transform: none !important;
+  transition: none !important;
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
+}
 
