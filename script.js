@@ -429,7 +429,7 @@ downloadBtn.addEventListener("click", () => {
   );
 
   Promise.all(loadPromises)
-    .then(() => htmlToImage.toPng(card, { quality: 1, pixelRatio: 2, backgroundColor: "transparent" }))
+    .then(() => htmlToImage.toPng(card, { quality: 1, pixelRatio: 4, backgroundColor: "transparent" }))
     .then(dataUrl => {
       const link = document.createElement("a");
       link.download = `member-card-${name}.png`;

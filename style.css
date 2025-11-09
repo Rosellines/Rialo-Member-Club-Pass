@@ -18,7 +18,7 @@ body {
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 40px;
   font-weight: 700;
 }
 
@@ -157,12 +157,12 @@ h1 {
 
 .logo-text .club-pass {
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 32px;
   letter-spacing: 2px;
 }
 
 .logo-text .rialo {
-  font-size: 0.9rem;
+  font-size: 14px;
   opacity: 0.8;
 }
 
@@ -178,27 +178,27 @@ h1 {
 }
 
 .member-info h2 {
-  font-size: 1.4rem;
+  font-size: 22px;
   font-weight: 700;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .member-subtext {
-  font-size: 1rem;
+  font-size: 16px;
   opacity: 0.8;
   margin-top: 4px;
   letter-spacing: 2px;
 }
 
 .member-id {
-  font-size: 0.9rem;
+  font-size: 14px;
   opacity: 0.7;
   margin-top: 8px;
   letter-spacing: 1px;
 }
 
 .join-date {
-  font-size: 0.9rem;
+  font-size: 14px;
   opacity: 0.7;
   margin-top: 8px;
   letter-spacing: 1px;
@@ -252,7 +252,7 @@ h1 {
 }
 
 .back-text {
-  font-size: 1.2rem;
+  font-size: 19px;
   line-height: 1.5;
   color: white;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
@@ -368,7 +368,7 @@ input[type="color"] {
 
 .info {
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 13px;
   color: #94a3b8;
   margin-top: 12px;
 }
