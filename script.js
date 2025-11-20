@@ -314,7 +314,7 @@ card.addEventListener("mousemove", e => {
       radial-gradient(circle at ${lightX}% ${lightY}%, rgba(255,255,255,0.45), rgba(255,255,255,0.05) 60%, transparent 100%)
     `;
     glare.style.mixBlendMode = "screen";
-    glare.style.opacity = 0.7;
+    glare.style.opacity = 0.0;
   }
 });
 

@@ -90,6 +90,19 @@ h1 {
   backface-visibility: hidden;
 }
 
+.card-body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  z-index: -1;
+  transition: filter 0.3s ease;
+}
+
+.card:hover .card-body::before {
+  filter: blur(0px);
+}
+
 .card-body.back {
   transform: rotateY(180deg);
 }
