@@ -29,10 +29,108 @@ h1 {
 
 .content {
   display: grid;
-  grid-template-columns: 1fr 400px 200px;
-  gap: 60px;
+  grid-template-columns: 1fr minmax(280px, 40vw) minmax(180px, 20vw);
+  gap: 3vw;
   align-items: start;
   justify-content: center;
+}
+
+/* Media Queries untuk responsivitas */
+@media (max-width: 1200px) {
+  .container {
+    padding: 20px;
+  }
+
+  .logo {
+    margin: 20px 0 0 20px;
+  }
+
+  .logo img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .logo-text .club-pass {
+    font-size: 20px;
+  }
+
+  .logo-text .rialo {
+    font-size: 12px;
+  }
+
+  .member-info {
+    width: 90%;
+    max-width: 240px;
+    margin-top: 12vh;
+    padding: 0 8px;
+  }
+
+  .member-info h2 {
+    font-size: 18px;
+  }
+
+  .member-subtext {
+    font-size: 14px;
+  }
+
+  .member-id,
+  .join-date {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 20px 15px;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .logo {
+    margin: 0 auto 15px auto;
+    justify-content: center;
+  }
+
+  .logo img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logo-text .club-pass {
+    font-size: 18px;
+  }
+
+  .logo-text .rialo {
+    font-size: 10px;
+  }
+
+  .member-info {
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+    padding: 0 5px;
+  }
+
+  .member-info h2 {
+    font-size: 20px;
+  }
+
+  .member-subtext {
+    font-size: 15px;
+  }
+
+  .member-id,
+  .join-date {
+    font-size: 12px;
+  }
+
+  .bottom-right {
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 /* ==========================
@@ -155,21 +253,24 @@ h1 {
 
 /* LOGO AREA */
 .logo {
-  position: absolute;
-  top: 30px;
-  left: 30px;
+  /* Ubah dari absolute ke relative flexbox */
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
   z-index: 2;
+  margin: 30px 0 0 30px;
 }
 
 .logo img {
-  width: 80px;
-  height: 80px;
+  width: 6vw;
+  height: 6vw;
+  max-width: 80px;
+  max-height: 80px;
   border-radius: 8px;
   padding: 4px;
   backdrop-filter: blur(4px);
+  flex-shrink: 0;
 }
 
 .logo-text {
@@ -182,54 +283,72 @@ h1 {
 
 .logo-text .club-pass {
   font-weight: 700;
-  font-size: 32px;
+  font-size: 2vw;
+  max-font-size: 24px;
   letter-spacing: 2px;
 }
-
+  
 .logo-text .rialo {
-  font-size: 14px;
+  font-size: 1vw;
+  max-font-size: 12px;
   opacity: 0.8;
 }
 
 /* MEMBER INFO */
 .member-info {
-  position: absolute;
-  top: 80%;
-  left: 40%;
-  transform: translate(-50%, -50%);
+  /* Ubah dari absolute ke relative flexbox dengan lebar adaptif */
+  position: relative;
+  margin: 15vh auto 0 auto;
   text-align: left;
   z-index: 3;
-  width: 200px; /* Fixed width to prevent shifting */
+  width: 80%;
+  max-width: 260px;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .member-info h2 {
-  font-size: 22px;
+  font-size: 1vw;
+  max-font-size: 14px;  
   font-weight: 700;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .member-subtext {
-  font-size: 16px;
+  font-size: 0.75vw;
+  max-font-size: 10px;
   opacity: 0.8;
   margin-top: 4px;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
 .member-id {
-  font-size: 14px;
+  font-size: 0.65vw;
+  max-font-size: 9px;
   opacity: 0.7;
   margin-top: 8px;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   font-family: 'Orbitron', monospace;
+  text-align: left;
 }
 
 .join-date {
-  font-size: 14px;
+  font-size: 0.65vw;
+  max-font-size: 9px;
   opacity: 0.7;
   margin-top: 8px;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   transition: color 0.3s ease;
   font-family: 'Orbitron', monospace;
+  text-align: left;
+}
+
+.member-info {
+  /* Shift text more to the left */
+  margin-left: 150px;
 }
 
 /* PHOTO */
