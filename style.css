@@ -326,8 +326,8 @@ h1 {
 }
 
 .member-id {
-  font-size: 0.65vw;
-  max-font-size: 9px;
+  font-size: 0.55vw;
+  max-font-size: 7px;
   opacity: 0.7;
   margin-top: 8px;
   letter-spacing: 0.5px;
@@ -336,8 +336,8 @@ h1 {
 }
 
 .join-date {
-  font-size: 0.65vw;
-  max-font-size: 9px;
+  font-size: 0.55vw;
+  max-font-size: 7px;
   opacity: 0.7;
   margin-top: 8px;
   letter-spacing: 0.5px;
