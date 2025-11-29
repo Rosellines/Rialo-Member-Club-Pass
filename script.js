@@ -212,6 +212,17 @@ function updateCardTheme() {
     }
   }
 
+  // Hide back logo and text when custom back background is set
+  const backLogo = card.querySelector('.back-logo');
+  const backText = card.querySelector('.back-text');
+  if (customBackBackground) {
+    if (backLogo) backLogo.style.display = 'none';
+    if (backText) backText.style.display = 'none';
+  } else {
+    if (backLogo) backLogo.style.display = '';
+    if (backText) backText.style.display = '';
+  }
+
   // fade swap logos
   logoImg.style.opacity = 0;
   backLogoImg.style.opacity = 0;
