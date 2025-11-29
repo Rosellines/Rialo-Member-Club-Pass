@@ -104,6 +104,8 @@ const gradientStart = document.getElementById("gradient-start");
 const gradientEnd = document.getElementById("gradient-end");
 const backgroundUpload = document.getElementById("background-upload");
 const backgroundUploadSuccess = document.getElementById("background-upload-success");
+const backBackgroundUpload = document.getElementById("back-background-upload");
+const backBackgroundUploadSuccess = document.getElementById("back-background-upload-success");
 const nameColor = document.getElementById("name-color");
 const subtextColor = document.getElementById("subtext-color");
 const idColor = document.getElementById("id-color");
@@ -121,6 +123,7 @@ card.querySelector(".card-body").appendChild(edgeLayer);
 
 let selectedTheme = themes[0];
 let customBackground = null;
+let customBackBackground = null;
 
 // Helper function to convert hex to rgba
 function hexToRgba(hex, alpha) {
@@ -194,15 +197,19 @@ function updateCardTheme() {
     body.style.backgroundSize = "cover";
     body.style.backgroundPosition = "center";
     body.style.backgroundRepeat = "no-repeat";
-    if (backBody) {
-      backBody.style.backgroundImage = `url(${customBackground})`;
+  } else {
+    body.style.background = selectedTheme.gradient;
+  }
+
+  if (backBody) {
+    if (customBackBackground) {
+      backBody.style.backgroundImage = `url(${customBackBackground})`;
       backBody.style.backgroundSize = "cover";
       backBody.style.backgroundPosition = "center";
       backBody.style.backgroundRepeat = "no-repeat";
+    } else {
+      backBody.style.background = selectedTheme.gradient;
     }
-  } else {
-    body.style.background = selectedTheme.gradient;
-    if (backBody) backBody.style.background = selectedTheme.gradient;
   }
 
   // fade swap logos
@@ -243,19 +250,29 @@ function updateCardTheme() {
   }
 
   /* 🎃 FIX FINAL */
-  if (selectedTheme.id === "halloween" && !customBackground) {
-    body.classList.add("haunted-only");
-    body.style.removeProperty("background");
+  if (selectedTheme.id === "halloween") {
+    if (!customBackground) {
+      body.classList.add("haunted-only");
+      body.style.removeProperty("background");
+    } else {
+      body.classList.remove("haunted-only");
+    }
     if (backBody) {
-      backBody.classList.add("haunted-only");
-      backBody.style.removeProperty("background");
+      if (!customBackBackground) {
+        backBody.classList.add("haunted-only");
+        backBody.style.removeProperty("background");
+      } else {
+        backBody.classList.remove("haunted-only");
+      }
     }
   } else {
     body.classList.remove("haunted-only");
     if (backBody) backBody.classList.remove("haunted-only");
     if (!customBackground) {
       body.style.background = selectedTheme.gradient;
-      if (backBody) backBody.style.background = selectedTheme.gradient;
+    }
+    if (backBody && !customBackBackground) {
+      backBody.style.background = selectedTheme.gradient;
     }
   }
   /* 🎃 Dekorasi Halloween hanya muncul di tema Haunted Night */
@@ -362,6 +379,22 @@ backgroundUpload.addEventListener("change", e => {
     customBackground = reader.result;
     backgroundUploadSuccess.textContent = "✓ Background uploaded successfully";
     backgroundUploadSuccess.style.color = "#34d399";
+    updateCardTheme();
+  };
+  reader.readAsDataURL(file);
+});
+
+/* ==========================
+   🖼️ UPLOAD BACK BACKGROUND IMAGE
+   ========================== */
+backBackgroundUpload.addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    customBackBackground = reader.result;
+    backBackgroundUploadSuccess.textContent = "✓ Back background uploaded successfully";
+    backBackgroundUploadSuccess.style.color = "#34d399";
     updateCardTheme();
   };
   reader.readAsDataURL(file);
